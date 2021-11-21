@@ -3,6 +3,7 @@ from Connection.Connection import Conn
 from Segment.FlagEnums import FlagEnums
 from Segment.Segment import Segment
 
+
 class Server:
     def __init__(self):
         self.connection = Conn()
