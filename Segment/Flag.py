@@ -10,20 +10,20 @@ class Flag:
     
     """
     def __init__(self, flag: Union[FlagEnums, int]):
-        if type(flag) == FlagEnums:
-            self.syn = bool(flag.value & FlagEnums.SYN_ONLY.value)
-            self.ack = bool(flag.value & FlagEnums.ACK_ONLY.value)
-            self.fin = bool(flag.value & FlagEnums.FIN_ONLY.value)
-            self.bytes = struct.pack("B", flag.value)
-        if type(flag) == int:
-            self.syn = bool(flag & (FlagEnums.SYN_ONLY.value))
-            self.ack = bool(flag & (FlagEnums.ACK_ONLY.value))
-            self.fin = bool(flag & (FlagEnums.FIN_ONLY.value))
-            byte = FlagEnums.DATA_ONLY.value
-            if self.syn:
-                byte |= FlagEnums.SYN_ONLY.value
-            if self.ack:
-                byte |= FlagEnums.ACK_ONLY.value
-            if self.fin:
-                byte |= FlagEnums.FIN_ONLY.value
-            self.bytes = struct.pack("B", byte)
+        self.syn = bool((flag.value if type(flag) == FlagEnums else flag ) & FlagEnums.SYN_ONLY.value)
+        self.ack = bool((flag.value if type(flag) == FlagEnums else flag ) & FlagEnums.ACK_ONLY.value)
+        self.fin = bool((flag.value if type(flag) == FlagEnums else flag ) & FlagEnums.FIN_ONLY.value)
+        self.bytes = struct.pack("B", (flag.value if type(flag) == FlagEnums else flag ))
+        
+        # Readable version of above.
+        # !DO NOT REMOVE THESE LINES. REMOVE THESE AFTER THIS PROJECT DONE
+        # if type(flag) == FlagEnums:
+        #     self.syn = bool(flag.value & FlagEnums.SYN_ONLY.value)
+        #     self.ack = bool(flag.value & FlagEnums.ACK_ONLY.value)
+        #     self.fin = bool(flag.value & FlagEnums.FIN_ONLY.value)
+        #     self.bytes = struct.pack("B", flag.value)
+        # if type(flag) == int:
+        #     self.syn = bool(flag & (FlagEnums.SYN_ONLY.value))
+        #     self.ack = bool(flag & (FlagEnums.ACK_ONLY.value))
+        #     self.fin = bool(flag & (FlagEnums.FIN_ONLY.value))
+        #     self.bytes = struct.pack("B", flag)
