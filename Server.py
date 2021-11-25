@@ -75,9 +75,7 @@ class Server:
         self.connection.send_data(syn_ack_resp, addr)
 
         recvaddr, resp = self.connection.listen_for_data()
-        if recvaddr == addr and resp.get_flag().ack and resp.is_valid_checksum():
-            return True
-        return False
+        return recvaddr == addr and resp.get_flag().ack and resp.is_valid_checksum()
 
     def fileTransfer(self):
         print("\n[v] Initiating three way handshake with the clients...")

@@ -34,7 +34,6 @@ class Client:
         self.connection = Conn(
             self.ip,
             self.port,
-            send_broadcast=True
         )
         self.server_broadcast_addr = (broad_server, port_server)
 
