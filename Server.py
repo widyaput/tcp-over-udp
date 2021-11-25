@@ -171,20 +171,21 @@ class Server:
                     print(f"[Segment SEQ={ackNumber}] NOT ACKED. Socket timeout!")
                     break
             
-        print(f"\n### Sending FIN to client... File transfer has been completed ###")
+        print(f"\n### Sending FIN to client ### \n\n### File transfer has been completed ###")
         sendSegment = Segment()
         sendSegment.set_flag(FlagEnums.FIN_ONLY)
         self.connection.send_data(sendSegment, clientAddress)
 
         _, recvSegment = self.connection.listen_for_data()
-        isNotValidACK = recvSegment.get_ack() == 0
+        ackNumber = recvSegment.get_ack()
 
-        if isNotValidACK:
-            print(f"\n[Segment FIN] Invalid ACK segment\n")
+        if not recvSegment.get_flag().ack:
+            print(f"\n[Segment SEQ={ackNumber}] Invalid ACK segment\n")
             print(recvSegment)
         else:
-            print(f"\n### Connection closed ###\n")
+            print(f"\n### Connection closed ###")
         fObj.close()
+
 
             
 if __name__ == "__main__":
