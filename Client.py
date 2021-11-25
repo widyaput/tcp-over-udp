@@ -60,6 +60,7 @@ class Client:
                     
                     ackSegment = Segment()
                     ackSegment.set_ack(reqNumber)
+                    ackSegment.set_flag(FlagEnums.ACK_ONLY)
 
                     self.connection.send_data(ackSegment, serverAddress)
                     reqNumber += 1
@@ -76,7 +77,11 @@ class Client:
                 else:
                      print(f"[!] Sequence number not equal with the Request Number, ignoring the segment...") 
             else:
-                print(f"[!] Checksum has failed, ignoring the segment")
+                print(f"[!] Checksum has failed, sending the previous sequence number")
+                ackSegment = Segment()
+                ackSegment.set_ack(reqNumber)
+
+                self.connection.send_data(ackSegment, serverAddress)
                 print(recvSegment)
 
         self.connection.close_socket()

@@ -110,7 +110,7 @@ class Server:
                 sendSegment.set_data(readData)
                 nextSequence = windowStart+ithSegment
                 sendSegment.set_sequence(nextSequence)
-                # No need to set the ack i guess
+                sendSegment.set_ack(ithSegment)
                 self.connection.send_data(sendSegment, clientAddress)
                 print(f"[v] Sending segment with sequence number {nextSequence}")
                 
@@ -137,6 +137,7 @@ class Server:
                     else:
                         print(f"[!] Checksum failed!")
                         print(recvSegment)
+                        break
                 except socket.timeout:
                     print(f"[!] Socket timeout!")
                     break
@@ -154,6 +155,6 @@ class Server:
             print(recvSegment)
         else:
             print(f"\n[!] Connection closed\n")
-            fObj.close()
+        fObj.close()
 
             
