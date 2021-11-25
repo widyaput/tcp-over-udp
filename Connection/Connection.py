@@ -3,7 +3,7 @@ from Segment.Segment import Segment
 import socket
 
 class Conn:
-    def __init__(self, ip : str, port : int, auto_ifname : str = None, send_broadcast : bool = False, listen_broadcast : bool = False):
+    def __init__(self, ip : str, port : int, send_broadcast : bool = False, listen_broadcast : bool = False):
         self.ip   = ip
         self.port = port
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -22,18 +22,12 @@ class Conn:
         dest = (ip, port)
         """
         # pass
-        self.sock.sendto(seg, dest)
-        
-    def get_ipv4(self) -> str:
-        return self.ip
+        self.sock.sendto(seg.get_all_as_bytes(), dest)
     
-    def get_broadcast_addr(self) -> str:
-        return self.broadcast_addr
+    # def set_listen_timeout(self, timeout : float):
+    #     self.sock.settimeout(timeout)
         
-    def set_listen_timeout(self, timeout : float):
-        self.sock.settimeout(timeout)
-        
-    def listen_for_data(self) -> Tuple(Tuple(str, int), Segment):
+    def listen_for_data(self) -> Tuple[Tuple[str, int], Segment]:
         """
         Return (_RetAddress, data as Segment)
         """
