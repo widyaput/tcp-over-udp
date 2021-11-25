@@ -27,7 +27,6 @@ class Segment:
 {'Valid checksum':18} = {self.is_valid_checksum()}
 {'Length of data':18} = {len(self.__data)} bytes
         """
-    
     def __sumSegment(self) -> int:
         """
         Get sum of all segment exclude checksum
@@ -104,7 +103,7 @@ class Segment:
         """
         return self.__data
     
-    def get_flag(self) -> Union[FlagEnums, int]:
+    def get_flag(self) -> Flag:
         """
         Getter for flag
 
@@ -135,4 +134,7 @@ class Segment:
         """
         return self.__checksum == 0xFFFF - self.__sumSegment()
 
+    @staticmethod
+    def get_max_data_size():
+        return 32768
 
