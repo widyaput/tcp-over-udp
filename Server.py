@@ -132,8 +132,10 @@ class Server:
                                 print(f"[v] New sequence base = {windowStart}, ACK number {ackNumber}")
                             else:
                                 print(f"[!] Ignoring the segment, ACK number not match, ")
+                                break
                         else:
                             print(f"[!] Ignoring the segment, received address not match")
+                            break
                     else:
                         print(f"[!] Checksum failed!")
                         print(recvSegment)
