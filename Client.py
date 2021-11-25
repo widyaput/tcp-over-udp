@@ -116,20 +116,33 @@ class Client:
         fObj.close()
 
     def handshake_3way(self) -> bool:
+        print("[v] Starting file transfer...")
         syn_ack_resp = Segment()
+        print("[v] Initiating three way handshake...")
+        print("[v] Send SYN request to server...")
         syn_ack_resp.set_flag(FlagEnums.SYN_ONLY)
         self.connection.send_data(syn_ack_resp, self.server_broadcast_addr)
 
+        print("[!] Waiting for response server...")
         server_addr, resp = self.connection.listen_for_data()
+        print("[v] Server has been response...")
+        print("[v] Starting to check checksum...")
         if not resp.is_valid_checksum:
+            print("[x] Checksum does not valid...")
+            print("[x] Exiting the program...")
             exit(1)
+        
+        print("[v] Checksum valid...")
         resp_flag = resp.get_flag()
         if resp_flag.syn and resp_flag.ack:
             ack_req = Segment()
             ack_req.set_flag(FlagEnums.ACK_ONLY)
             self.connection.send_data(ack_req, server_addr)
             self.server_addr = server_addr
+            print("[v] Three way handshake has been successfully...")
         else:
+            print("[x] Three way handshake error...")
+            print("[x] Exiting the program...")
             exit(1)
 
 
