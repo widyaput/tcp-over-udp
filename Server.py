@@ -51,7 +51,7 @@ class Server:
         )
 
     def find_clients(self):
-        print("Listen for clients")
+        print("### Listening for clients ###")
         self.clientConnection = []
         listening = "y"
 
@@ -59,7 +59,7 @@ class Server:
             addr, resp = self.connection.listen_for_data()
             if resp.get_flag().syn and resp.is_valid_checksum() and addr not in self.clientConnection:
                 self.clientConnection.append(addr)
-                listening = input("Listen more? (y/n)")
+                listening = input("Listen more? (y/n) ")
         
 
     def handshake_3way(self, addr: Tuple[str, int]) -> bool:
@@ -80,7 +80,7 @@ class Server:
         return False
 
     def fileTransfer(self):
-        print("\n[v] Initiating three way handshake with the clients...")
+        print("\n### Initiating three way handshake with the clients ###")
         failedHandshakeClient = []
         
         # Anggap lah list of client sudah terinisialisasi
@@ -95,7 +95,7 @@ class Server:
         for clientAddress in failedHandshakeClient:
             self.clientConnection.remove(clientAddress)
         
-        print("\n[v] Commencing file transfer...")
+        print("\n### Commencing file transfer ###")
 
         for clientAddress in self.clientConnection:
             self.goBackNARQServer(clientAddress)
@@ -139,7 +139,7 @@ class Server:
                 nextSequence = windowStart+ithSegment
                 sendSegment.set_sequence(nextSequence)
                 self.connection.send_data(sendSegment, clientAddress)
-                print(f"[v] Sending segment with sequence number {nextSequence}")
+                print(f"[Segment SEQ={nextSequence}] Sent")
                 
                 ithSegment += 1
             
@@ -156,34 +156,34 @@ class Server:
                                 windowStart += 1
                                 endOffset = windowStart+windowSize
                                 windowEnd = min(endOffset, segmentCnt)
-                                print(f"[v] New sequence base = {windowStart}, ACK number {ackNumber}")
+                                print(f"[Segment SEQ={ackNumber}] Acked")
                             else:
-                                print(f"[!] Ignoring the segment, ACK number not match, ")
+                                print(f"[Segment SEQ={ackNumber}] NOT ACKED. ACK number mismatch!")
                                 break
                         else:
-                            print(f"[!] Ignoring the segment, received address not match")
+                            print(f"[Segment SEQ={ackNumber}] NOT ACKED. Received address not match!")
                             break
                     else:
-                        print(f"[!] Checksum failed!")
+                        print(f"[Segment SEQ={ackNumber}] NOT ACKED. Checksum failed!")
                         print(recvSegment)
                         break
                 except socket.timeout:
-                    print(f"[!] Socket timeout!")
+                    print(f"[Segment SEQ={ackNumber}] NOT ACKED. Socket timeout!")
                     break
             
-        print(f"\n[v] Sending FIN to client... File transfer has been completed \n")
+        print(f"\n### Sending FIN to client... File transfer has been completed ###")
         sendSegment = Segment()
         sendSegment.set_flag(FlagEnums.FIN_ONLY)
         self.connection.send_data(sendSegment, clientAddress)
 
         _, recvSegment = self.connection.listen_for_data()
-        isNotValidACK = not(recvSegment.get_ack())
+        isNotValidACK = recvSegment.get_ack() == 0
 
         if isNotValidACK:
-            print(f"\n[!] Invalid ACK segment\n")
+            print(f"\n[Segment FIN] Invalid ACK segment\n")
             print(recvSegment)
         else:
-            print(f"\n[!] Connection closed\n")
+            print(f"\n### Connection closed ###\n")
         fObj.close()
 
             
