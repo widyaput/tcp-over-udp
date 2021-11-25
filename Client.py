@@ -79,7 +79,7 @@ class Client:
             else:
                 print(f"[!] Checksum has failed, sending the previous sequence number")
                 ackSegment = Segment()
-                ackSegment.set_ack(reqNumber)
+                ackSegment.set_ack(reqNumber-1)
 
                 self.connection.send_data(ackSegment, serverAddress)
                 print(recvSegment)
