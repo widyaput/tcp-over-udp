@@ -16,15 +16,31 @@ class Conn:
             self.sock.bind((self.ip, port))
         
     
-    def send_data(self, seg: Segment, dest: Tuple(str, int)):
+    def send_data(self, seg: Segment, dest: Tuple[str, int]):
         """
         seg = Segment that will be send
         dest = (ip, port)
         """
-        pass
-
+        # pass
+        self.sock.sendto(seg, dest)
+        
+    def get_ipv4(self) -> str:
+        return self.ip
+    
+    def get_broadcast_addr(self) -> str:
+        return self.broadcast_addr
+        
+    def set_listen_timeout(self, timeout : float):
+        self.sock.settimeout(timeout)
+        
     def listen_for_data(self) -> Tuple(Tuple(str, int), Segment):
         """
         Return (_RetAddress, data as Segment)
         """
-        pass
+        resp, addr = self.sock.recvfrom(2**16)
+        data = Segment()
+        data.set_all_from_bytes(resp)
+        return addr, data
+    
+    def close_socket(self):
+        self.sock.close()
