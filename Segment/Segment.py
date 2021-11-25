@@ -14,19 +14,6 @@ class Segment:
         self.__checksum = 0
         self.__data = b""
     
-    def __str__(self):
-        """
-        String representation of segment
-        """
-        return f"""
-*** Segment Info ***
-{'SEQ number':18} = {self.__sequence}
-{'ACK number':18} = {self.__ack}
-{'Flags':18} = [SYN {self.__flag.syn}] [ACK {self.__flag.ack}] [FIN {self.__flag.fin}]
-{'Checksum':18} = {hex(self.__checksum)}
-{'Valid checksum':18} = {self.is_valid_checksum()}
-{'Length of data':18} = {len(self.__data)} bytes
-        """
     def __sumSegment(self) -> int:
         """
         Get sum of all segment exclude checksum

@@ -56,7 +56,7 @@ class Client:
         else:
             print(f"[!] Checksum has failed, ignoring the segment")
 
-        print(recvSegment)
+        
     
     def goBackNARQClient(self):
         print("[v] Starting file transfer...")
@@ -102,14 +102,14 @@ class Client:
                     ackSegment.set_ack(reqNumber-1)
 
                     self.connection.send_data(ackSegment, self.server_broadcast_addr)
-                    print(recvSegment)
+                    
             else:
                 print(f"[!] Checksum has failed, sending the previous sequence number")
                 ackSegment = Segment()
                 ackSegment.set_ack(reqNumber-1)
 
                 self.connection.send_data(ackSegment, self.server_broadcast_addr)
-                print(recvSegment)
+                
 
         self.connection.close_socket()
         fObj.close()

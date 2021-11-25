@@ -157,6 +157,9 @@ class Server:
                                 print(f"[Segment SEQ={ackNumber}] Acked")
                             else:
                                 print(f"[Segment SEQ={ackNumber}] NOT ACKED. ACK number mismatch!")
+                                windowStart = ackNumber
+                                endOffset = windowStart+windowSize
+                                windowEnd = min(endOffset, segmentCnt)
                                 break
                         else:
                             print(f"[Segment SEQ={ackNumber}] NOT ACKED. Received address not match!")
