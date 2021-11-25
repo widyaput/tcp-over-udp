@@ -41,22 +41,19 @@ class Client:
     def receiveMetadata(self):
         print(f"\n[v] Fetching the metadata...")
 
-        recvAddr, recvSegment = self.connection.listen_for_data()
+        _, recvSegment = self.connection.listen_for_data()
         recvData = recvSegment.get_data()
         isValidChecksum = recvSegment.is_valid_checksum()
 
         if isValidChecksum:
-            if self.server_broadcast_addr == recvAddr:
-                byteSeparator = b"\x00"
-                fileName, fileExt = recvData.split(byteSeparator)
-                fileName = fileName.decode("utf-8")
-                fileExt = fileExt.decode("utf-8")
+            byteSeparator = b"\x00"
+            fileName, fileExt = recvData.split(byteSeparator)
+            fileName = fileName.decode("utf-8")
+            fileExt = fileExt.decode("utf-8")
 
-                print(f"[v] Metadata Info :")
-                print(f"[v] File Name : {fileName}")
-                print(f"[v] File Extension : {fileExt}\n")
-            else:
-                print(f"[!] Ignoring segment, Server address not match")
+            print(f"[v] Metadata Info :")
+            print(f"[v] File Name : {fileName}")
+            print(f"[v] File Extension : {fileExt}\n")
         else:
             print(f"[!] Checksum has failed, ignoring the segment")
 
@@ -95,7 +92,7 @@ class Client:
                     print(f"[v] Sending ACK and tearing down the connection...")
                     
                     ackSegment = Segment()
-                    ackSegment.set_flag(FlagEnums.FIN_ONLY)
+                    ackSegment.set_flag(FlagEnums.ACK_ONLY)
 
                     self.connection.send_data(ackSegment, self.server_broadcast_addr)
 

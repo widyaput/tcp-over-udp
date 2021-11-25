@@ -114,7 +114,7 @@ class Server:
 
     def goBackNARQServer(self, clientAddress: Tuple):
         if self.is_send_metadata:
-            self.sendMetadata()
+            self.sendMetadata(clientAddress)
         
         windowSize = self.windowSize
         segmentCnt = self.segmentCnt
@@ -177,9 +177,8 @@ class Server:
         self.connection.send_data(sendSegment, clientAddress)
 
         _, recvSegment = self.connection.listen_for_data()
-        isNotValidACK = not(recvSegment.get_ack())
 
-        if isNotValidACK:
+        if not recvSegment.get_flag().ack:
             print(f"\n[!] Invalid ACK segment\n")
             print(recvSegment)
         else:
